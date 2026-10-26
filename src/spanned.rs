@@ -25,6 +25,8 @@
 //! # }
 //! ```
 
+use std::ops::{Deref, DerefMut};
+
 use serde_core::de::{self, Deserializer, IntoDeserializer};
 use serde_core::{Deserialize, Serialize};
 
@@ -457,6 +459,19 @@ where
         // `Spanned<T>` is a deserialization helper that records source locations.
         // When serializing, we emit the wrapped value only.
         self.value.serialize(serializer)
+    }
+}
+
+impl<T> Deref for Spanned<T> {
+    type Target = T;
+    fn deref(&self) -> &Self::Target {
+        &self.value
+    }
+}
+
+impl<T> DerefMut for Spanned<T> {
+    fn deref_mut(&mut self) -> &mut Self::Target {
+        &mut self.value
     }
 }
 
